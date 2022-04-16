@@ -16,6 +16,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from app01 import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+
+    # 例如：当用户访问www.xxx.com/index时，会进入index函数
+    # 而函数写在view。py下
+    path('index/', views.index),
+    path('users/list/', views.user_list),
+    path('users/add/', views.user_add),
+
+    # 模板中心
+    path('tpl/', views.tpl),
+
+    #     联通新闻中心
+    path('news/', views.news),
+
+    #     请求和响应
+    path('reandres/', views.reANDres),
+
+    #     用户登录
+    path('login/', views.login)
 ]
