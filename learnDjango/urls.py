@@ -37,5 +37,14 @@ urlpatterns = [
     path('reandres/', views.reANDres),
 
     #     用户登录
-    path('login/', views.login)
+    path('login/', views.login),
+
+    # 测试orm操作MySQL数据库
+    path('orm/', views.orm),
+
+    # 案例：用户管理
+    path('info/list/', views.info_list),
+    path('info/add/', views.info_add),
+    path('info/delete/', views.info_delete)
+
 ]

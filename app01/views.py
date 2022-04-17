@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 import requests
+from app01.models import Department, UserInfo
 
 
 # Create your views here.
@@ -82,15 +83,78 @@ def reANDres(request):
 def login(request):
     if request.method == "GET":
         return render(request, 'login.html')
-    else:
-        # 是POST请求
-        # print(request.POST)
-        username = request.POST.get("user")
-        password = request.POST.get("pwd")
 
-        if username == 'root' and password == '123':
-            # return HttpResponse("登录成功")
-            return redirect("https://www.baidu.com")
-        else:
-            # return HttpResponse("登录失败")
-            return render(request, 'login.html', {"error_msg": "用户名或密码错误"})
+    # 是POST请求
+    # print(request.POST)
+    username = request.POST.get("user")
+    password = request.POST.get("pwd")
+
+    if username == 'root' and password == '123':
+        # return HttpResponse("登录成功")
+        return redirect("https://www.baidu.com")
+
+    # return HttpResponse("登录失败")
+    return render(request, 'login.html', {"error_msg": "用户名或密码错误"})
+
+
+def orm(request):
+    # 测试orm添加数据
+    # Department.objects.create(title="销售部")
+    # Department.objects.create(title="IT部")
+    # Department.objects.create(title="运营部")
+
+    # UserInfo.objects.create(name="tt", password="123", age=23, size=5)
+
+    # 测试orm删除数据
+    # UserInfo.objects.filter(id=2).delete()
+    # UserInfo.objects.filter(id=3).delete()
+    # Department.objects.all().delete()
+
+    # 测试orm获取数据
+    # 筛选得到的数据是一个列表，列表里面是一行行的数据->[行， 行]
+    # 是QuerySet类型
+    # 而每一行都是一个对象，里面封装了所有列和对应的字段
+    data_list = UserInfo.objects.all()
+    # print(data_list)
+    for obj in data_list:
+        print(obj.id, obj.name, obj.password, obj.age)
+
+    # 如果知道拿到的只有一行数据，或者只要第一行数据
+    # 可以使用.first()方法
+    row_obj = UserInfo.objects.filter(id=1).first()
+    print(row_obj.name)
+
+    # 更新数据
+    # UserInfo.objects.all().update(password=999)
+
+    return HttpResponse("成功")
+
+
+def info_list(request):
+    # 获取数据库中所有的用户信息
+    data_list = UserInfo.objects.all()
+    # print(data_list)
+
+    return render(request, "info_list.html", {"data_list": data_list})
+
+
+def info_add(request):
+    if request.method == "GET":
+        return render(request, "info_add.html")
+
+    # 获取用户提交的post请求
+    user = request.POST.get("user")
+    pwd = request.POST.get("pwd")
+    age = request.POST.get("age")
+    size = request.POST.get("size")
+
+    # 添加到数据库
+    UserInfo.objects.create(name=user, password=pwd, age=age, size=size)
+
+    return redirect("/info/list/")
+
+
+def info_delete(request):
+    nid = request.GET.get('nid')
+    UserInfo.objects.filter(id=nid).delete()
+    return redirect("/info/list/")
